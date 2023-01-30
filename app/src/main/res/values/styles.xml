@@ -42,6 +42,12 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/poppins_light</item>
     </style>
+    
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
 
 
     <dimen name="h4TextSize">35sp</dimen>
