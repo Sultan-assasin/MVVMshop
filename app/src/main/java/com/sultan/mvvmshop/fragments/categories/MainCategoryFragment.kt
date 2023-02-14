@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +22,7 @@ import com.sultan.mvvmshop.viewmodel.MainCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-private val TAG = "MainCategoryFragment"
+private const val TAG = "MainCategoryFragment"
 
 @AndroidEntryPoint
 class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
@@ -92,10 +93,10 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
             viewModel.bestProducts.collectLatest {
                 when (it) {
                     is Resource.Loading -> {
-                        showLoading()
+                        binding.bestProductsProgressBar.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-                        hideLoading()
+                        binding.bestProductsProgressBar.visibility = View.GONE
                         bestProductAdapter.differ.submitList(it.data)
                     }
                     is Resource.Error -> {
@@ -108,6 +109,11 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
                 }
             }
         }
+        binding.nestedScrollMainCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener{v,_,scrollY,_,_ ->
+            if(v.getChildAt(0).bottom <= v.height + scrollY){
+                viewModel.fetchProducts()
+            }
+        })
 
     }
 
