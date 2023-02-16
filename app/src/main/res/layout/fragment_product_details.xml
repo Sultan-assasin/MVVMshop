@@ -150,7 +150,7 @@
             style="@style/blueButtonStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/mediumButtonHeight"
-            android:text="Login"
+            android:text="Add to cart"
             app:spinning_bar_color="@color/white"
             android:layout_marginTop="45dp"
             app:layout_constraintBottom_toBottomOf="parent"

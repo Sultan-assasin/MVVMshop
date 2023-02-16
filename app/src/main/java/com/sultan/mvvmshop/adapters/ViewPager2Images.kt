@@ -28,7 +28,7 @@ class ViewPager2Images : RecyclerView.Adapter<ViewPager2Images.ViewPager2ImagesV
             return oldItem ==newItem
         }
     }
-    private val differ = AsyncListDiffer(this,diffCallBack)
+    val differ = AsyncListDiffer(this,diffCallBack)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPager2ImagesViewHolder {
         return ViewPager2ImagesViewHolder(
             ViewpagerImageItemBinding.inflate(
