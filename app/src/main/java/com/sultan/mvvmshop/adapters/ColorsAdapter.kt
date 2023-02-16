@@ -40,7 +40,7 @@ class ColorsAdapter : RecyclerView.Adapter<ColorsAdapter.ColorsViewHolder>() {
             return oldItem == newItem
         }
     }
-    private val differ = AsyncListDiffer(this, diffCallBack)
+    val differ = AsyncListDiffer(this, diffCallBack)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorsViewHolder {
         return ColorsViewHolder(
             ColorRvItemBinding.inflate(
