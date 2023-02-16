@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sultan.mvvmshop.data.Product
 import com.sultan.mvvmshop.databinding.ProductRvItemBinding
+import com.sultan.mvvmshop.helper.getProductPrice
 
 class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.BestProductViewHolder>() {
 
@@ -17,14 +18,12 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.BestProductVi
 
         fun bind(product: Product) {
             binding.apply {
-                Glide.with(itemView).load(product.images!![0]).into(imgProduct)
-                product.offerPercentage?.let {
-                    val remainingPricePercentage = 1f - it
-                    val priceAfterOffer = remainingPricePercentage*product.price
-                    tvNewPrice.text = "$ ${String.format("%.2f", priceAfterOffer)}"
-                }
+                val priceAfterOffer = product.offerPercentage.getProductPrice(product.price)
+                tvNewPrice.text = "$ ${String.format("%.2f", priceAfterOffer)}"
                 if (product.offerPercentage == null)
                     tvNewPrice.visibility = View.INVISIBLE
+
+                Glide.with(itemView).load(product.images!![0]).into(imgProduct)
                 tvPrice.text = "$ ${product.price}"
                 tvName.text = product.name
             }
@@ -63,6 +62,7 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.BestProductVi
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-    var onClick:((Product) -> Unit)? = null
+
+    var onClick: ((Product) -> Unit)? = null
 }
 
