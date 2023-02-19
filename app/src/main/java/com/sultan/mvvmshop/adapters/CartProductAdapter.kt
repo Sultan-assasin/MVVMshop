@@ -15,26 +15,20 @@ import com.sultan.mvvmshop.helper.getProductPrice
 class CartProductAdapter :
     RecyclerView.Adapter<CartProductAdapter.CartProductsViewHolder>() {
 
-    inner class CartProductsViewHolder(val binding: CartProductItemBinding) :
+    inner class CartProductsViewHolder( val binding: CartProductItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(cartProduct: CartProduct) {
             binding.apply {
-                Glide.with(itemView).load(cartProduct.product.images!![0]).into(imageCartProduct)
-
+                Glide.with(itemView).load(cartProduct.product.images?.get(0)).into(imageCartProduct)
                 tvProductCartName.text = cartProduct.product.name
                 tvCartProductQuantity.text = cartProduct.quantity.toString()
-                val priceAfterPercentage =
-                    cartProduct.product.offerPercentage.getProductPrice(cartProduct.product.price)
+
+                val priceAfterPercentage = cartProduct.product.offerPercentage.getProductPrice(cartProduct.product.price)
                 tvProductCartPrice.text = "$ ${String.format("%.2f", priceAfterPercentage)}"
 
-                imageCartProductColor.setImageDrawable(
-                    ColorDrawable(
-                        cartProduct.selectedColor ?: Color.TRANSPARENT
-                    )
-                )
-                tvCartProductSize.text = cartProduct.selectedSize ?: "".also {
-                    imageCartProductSize.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
+                imageCartProductColor.setImageDrawable(ColorDrawable(cartProduct.selectedColor?: Color.TRANSPARENT))
+                tvCartProductSize.text = cartProduct.selectedSize?:"".also { imageCartProductSize.setImageDrawable(ColorDrawable(Color.TRANSPARENT)) }
             }
         }
     }
@@ -47,10 +41,9 @@ class CartProductAdapter :
         override fun areContentsTheSame(oldItem: CartProduct, newItem: CartProduct): Boolean {
             return oldItem == newItem
         }
-
     }
-    val differ = AsyncListDiffer(this, diffCallback)
 
+    val differ = AsyncListDiffer(this, diffCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductsViewHolder {
         return CartProductsViewHolder(
@@ -63,16 +56,17 @@ class CartProductAdapter :
     override fun onBindViewHolder(holder: CartProductsViewHolder, position: Int) {
         val cartProduct = differ.currentList[position]
         holder.bind(cartProduct)
+
         holder.itemView.setOnClickListener {
             onProductClick?.invoke(cartProduct)
         }
 
-        holder.binding.imageMinus.setOnClickListener {
-            onMinusClick?.invoke(cartProduct)
-        }
-
         holder.binding.imagePlus.setOnClickListener {
             onPlusClick?.invoke(cartProduct)
+        }
+
+        holder.binding.imageMinus.setOnClickListener {
+            onMinusClick?.invoke(cartProduct)
         }
     }
 
@@ -80,8 +74,10 @@ class CartProductAdapter :
         return differ.currentList.size
     }
 
-    private var onProductClick: ((CartProduct) -> Unit)? = null
-
+    var onProductClick: ((CartProduct) -> Unit)? = null
     var onPlusClick: ((CartProduct) -> Unit)? = null
     var onMinusClick: ((CartProduct) -> Unit)? = null
+
+
+
 }
