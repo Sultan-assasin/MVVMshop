@@ -40,14 +40,24 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
 
         setupCartRv()
 
+        var totalPrice = 0f
         lifecycleScope.launchWhenStarted {
             viewModel.productsPrice.collectLatest {
                 it?.let {
+                    totalPrice = it
                     binding.tvTotalPrice.text = "$ $it"
                 }
             }
         }
+        binding.imageCloseCart.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
+
+        binding.buttonCheckout.setOnClickListener {
+            val action = CartFragmentDirections.actionCartFragmentToBillingFragment(totalPrice,cartAdapter.differ.currentList.toTypedArray())
+            findNavController().navigate(action)
+        }
         lifecycleScope.launchWhenStarted {
             viewModel.deleteDialog.collectLatest {
                 val alertDilog = AlertDialog.Builder(requireContext()).apply {
@@ -96,7 +106,6 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                             showOtherViews()
 
                         }
-
                     }
                     is Resource.Error -> {
                         binding.progressbarCart.visibility = View.INVISIBLE
