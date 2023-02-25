@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.util.Util
 import com.sultan.mvvmshop.R
 import com.sultan.mvvmshop.data.Address
 import com.sultan.mvvmshop.databinding.AddressRvItemBinding
@@ -15,18 +14,18 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
 
     inner class AddressViewHolder(val binding: AddressRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(address: Address, isSelected: Boolean) {
+        fun bind(address: Address,isSelected: Boolean) {
             binding.apply {
                 buttonAddress.text = address.addressTitle
-                if (isSelected) {
-                    buttonAddress.background =
-                        ColorDrawable(itemView.context.resources.getColor(R.color.g_blue))
-                } else {
-                    buttonAddress.background =
-                        ColorDrawable(itemView.context.resources.getColor(R.color.g_white))
+                if (isSelected){
+                    buttonAddress.background = ColorDrawable(itemView.context.resources.getColor(R.color.g_blue))
+                }else{
+                    buttonAddress.background = ColorDrawable(itemView.context.resources.getColor(R.color.g_white))
                 }
             }
         }
+
+
     }
 
     private val diffUtil = object : DiffUtil.ItemCallback<Address>() {
@@ -37,9 +36,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
         override fun areContentsTheSame(oldItem: Address, newItem: Address): Boolean {
             return oldItem == newItem
         }
-
     }
-
     val differ = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {
@@ -56,17 +53,16 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
         holder.bind(address, selectedAddress == position)
 
         holder.binding.buttonAddress.setOnClickListener {
-            if (selectedAddress >= 0) {
+            if (selectedAddress >= 0)
                 notifyItemChanged(selectedAddress)
-            }
             selectedAddress = holder.adapterPosition
             notifyItemChanged(selectedAddress)
             onClick?.invoke(address)
         }
     }
-
+    //
     init {
-        differ.addListListener {_, _->
+        differ.addListListener { _, _ ->
             notifyItemChanged(selectedAddress)
         }
     }
@@ -75,6 +71,6 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() 
         return differ.currentList.size
     }
 
-    var onClick: ((Address) -> Util)? = null
 
+    var onClick: ((Address) -> Unit)? = null
 }
